@@ -96,25 +96,25 @@ def index():
 def contests():
     
     
-    return apology("TODO") 
+    return apology("TO BE ANNOUNCED") 
 
 @app.route("/ladder")
 @login_required
 def ladder():
     
-    return apology("TODO") 
+    return apology("YOU BETTER USE THE STAIRS") 
 
 @app.route("/aboutus")
 @login_required
 def aboutus():
     
-    return apology("TODO") 
+    return apology("A TEAM OF HIGHLY TRAINED...") 
 
 @app.route("/practice")
 @login_required
 def practice():
     
-    return apology("TODO") 
+    return apology("FOR NOW USE CODEFORCES.COM") 
     
 @app.route("/login", methods=["GET", "POST"])
 def login():
