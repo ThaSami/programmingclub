@@ -9,14 +9,18 @@ from helpers import *
 # configure application
 app = Flask(__name__)
 
-# ensure responses aren't cached
-if app.config["DEBUG"]:
-    @app.after_request
-    def after_request(response):
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        response.headers["Expires"] = 0
-        response.headers["Pragma"] = "no-cache"
-        return response
+
+
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Ensure responses aren't cached
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 # configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -24,7 +28,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['src-noconflict']="ace-builds/src-noconflict"
 app.config['static2']="static/register"
-
+app.config['static3']="static/login"
 Session(app)
 
 # configure CS50 Library to use SQLite database
@@ -40,6 +44,10 @@ def custom_static(filename):
 @app.route('/static/register/<path:filename>')
 def custom_static2(filename):
     return send_from_directory(app.config['static2'], filename,as_attachment=True)
+    
+@app.route('/static/login/<path:filename>')
+def custom_static3(filename):
+    return send_from_directory(app.config['static3'], filename,as_attachment=True)    
 
 @app.route("/change", methods=["GET", "POST"])
 @login_required

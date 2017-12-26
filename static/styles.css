@@ -1,15 +1,26 @@
-.container
-{
-    /* center contents */
-    margin-left: auto;
-    margin-right: auto;
+.container {
+    width:100%;
     text-align: center;
+    
 }
- #editor {
+
+#editor {
      display:block;
      width:400px;
      height:400px;
-    }
+}
+.navbar-default{
+    background-color:#151515; 
+    height:60px;
+    font-size:large;
+    padding-top:5px;
+
+}
+.navbar-default .navbar-nav li a{
+    color:white;
+}
+
+
 .navbar-default .navbar-brand{
     font-size: xx-large;
 }
@@ -31,6 +42,10 @@
 {
     color: #2e944b;
 }
+
+.navbar-default li:hover{
+    background-color:#7b7b7b;
+}
 main .form-control
 {
     /* center form controls */
@@ -40,28 +55,3 @@ main .form-control
     width: auto;
 }
 
-main{
-    overflow-x: auto;
-    text-align: center;
-}
-
-main img
-{
-    /* constrain images on small screens */
-    max-width: 100%;
-}
-
-main td
-{
-    /* left-align tables' cells */
-    text-align: left;
-}
-main table {
-    text-align: left;
-}
-
-main tfoot
-{
-    /* boldface tables' footers */
-    font-weight: bold;
-}
