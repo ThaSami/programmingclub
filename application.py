@@ -1,14 +1,18 @@
+import re
+import os
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session, url_for, send_from_directory
+from flask import Flask, flash, redirect, render_template, request, session, url_for, send_from_directory,jsonify
 from flask_session import Session
 from passlib.apps import custom_app_context as pwd_context
 from tempfile import mkdtemp
 from datetime import datetime
 from helpers import *
+from flask_jsglue import JSGlue
+import requests
 
 # configure application
 app = Flask(__name__)
-
+JSGlue(app)
 
 
 # Ensure templates are auto-reloaded
@@ -48,6 +52,33 @@ def custom_static2(filename):
 @app.route('/static/login/<path:filename>')
 def custom_static3(filename):
     return send_from_directory(app.config['static3'], filename,as_attachment=True)    
+
+
+#Check For Code
+@app.route("/compilez", methods=["POST","GET"])
+def compilez():
+    if request.method == "POST":
+        RUN_URL = u'https://api.hackerearth.com/code/run/'
+        CLIENT_SECRET = 'f917cae04619972b3c3a3bb62d6b1b59840be57d'
+        source="print('hello World')"    
+        data = {
+            'client_secret': CLIENT_SECRET,
+            'async': 0,
+            'source': source,
+            'lang': "PYTHON",
+            'time_limit': 50,
+            'memory_limit': 262144,
+            }
+            
+        r = requests.post(RUN_URL, data=data)
+        if not r:
+          raise RuntimeError("Limit time exceeded")
+        return r
+    raise RuntimeError("something wrong")
+    
+
+
+
 
 @app.route("/change", methods=["GET", "POST"])
 @login_required

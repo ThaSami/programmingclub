@@ -4,17 +4,82 @@
     Index
 {% endblock %}
 
+{% block head %}
+<style>
+
+.codearea{
+    width:500px;
+    height:640px;
+    display: block;
+    border:1px solid black;
+    position:relative;
+    float:right;
+}
+textarea {
+    resize: none;
+    background-color:black;
+    text-align:left;
+    
+}
+#editor{
+    width:100%;
+    height:360px;
+}
+label{
+    background-color:gray;
+}
+#stdin{
+    color:white;
+    width:100%;
+    height:75px;
+}
+#output{
+  width:100%;
+  height:90px;
+  background-color:black;
+  color:white;
+  text-align:left;
+}
+
+
+</style>
+
+
+{% endblock %}
+
+
 {% block main %}
-<pre id="editor">function foo(items) {
-    var i;
-    for (i = 0; i &lt; items.length; i++) {
-        alert("Ace Rocks " + items[i]);
-    }
-}</pre>
+<div class="codearea">
+<pre id="editor">PRINT ("HELLO WORLD")</pre>
+
+<label>STDIN:</label>
+    <textarea id="stdin"></textarea>
+<label>Output:</label>
+    <p  id="output">Output of all tests appear here</p>
+    <input type="button" value="Compile" id="send">
+</div>
+    
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/c_cpp");
+    editor.session.setMode("ace/mode/python");
+    
+      $('#send').on('click', function() {
+        var codeF = editor.getValue();
+        console.log(codeF)
+// passing the json file to the page 
+        var json = {
+            code: codeF
+        };
+        console.log(json);
+        
+        $.post(Flask.url_for("compilez"), json)
+        .done(function(data, textStatus, jqXHR) { 
+            console.log(data);S
+            document.getElementById("output").innerHTML = data.output;
+        });
+    });
+
 </script>
 {% endblock %}
