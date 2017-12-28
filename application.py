@@ -33,6 +33,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config['src-noconflict']="ace-builds/src-noconflict"
 app.config['static2']="static/register"
 app.config['static3']="static/login"
+app.config['static4']="static/API"
 Session(app)
 
 # configure CS50 Library to use SQLite database
@@ -53,31 +54,10 @@ def custom_static2(filename):
 def custom_static3(filename):
     return send_from_directory(app.config['static3'], filename,as_attachment=True)    
 
-
-#Check For Code
-@app.route("/compilez", methods=["POST","GET"])
-def compilez():
-    if request.method == "POST":
-        RUN_URL = u'https://api.hackerearth.com/code/run/'
-        CLIENT_SECRET = 'f917cae04619972b3c3a3bb62d6b1b59840be57d'
-        source="print('hello World')"    
-        data = {
-            'client_secret': CLIENT_SECRET,
-            'async': 0,
-            'source': source,
-            'lang': "PYTHON",
-            'time_limit': 50,
-            'memory_limit': 262144,
-            }
-            
-        r = requests.post(RUN_URL, data=data)
-        if not r:
-          raise RuntimeError("Limit time exceeded")
-        return r
-    raise RuntimeError("something wrong")
-    
-
-
+  
+@app.route('/static/API/<path:filename>')
+def custom_static4(filename):
+    return send_from_directory(app.config['static4'], filename,as_attachment=True)    
 
 
 @app.route("/change", methods=["GET", "POST"])

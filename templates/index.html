@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block head %}
+     <script src="{{ url_for('custom_static4',filename='langs.js') }}"></script>
+
 <style>
 
 .codearea{
@@ -58,25 +60,29 @@ label{
     <p  id="output">Output of all tests appear here</p>
     <input type="button" value="Compile" id="send">
 </div>
-    
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
-<script>
+<script type="text/javascript">
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/python");
     
-      $('#send').on('click', function() {
+   
+    //COMPILE USER GIVEN CODE
+    $('#send').on('click', function() {
         var codeF = editor.getValue();
-        console.log(codeF)
+        var stdin = $('#stdin').val();
 // passing the json file to the page 
         var json = {
-            code: codeF
+            language: 0,
+            code: codeF,
+            stdin:stdin
         };
         console.log(json);
-        
-        $.post(Flask.url_for("compilez"), json)
-        .done(function(data, textStatus, jqXHR) { 
-            console.log(data);S
+
+        $.post("/compile", json, function(data, error, xhr) {
+
             document.getElementById("output").innerHTML = data.output;
         });
     });
