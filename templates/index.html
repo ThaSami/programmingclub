@@ -81,7 +81,7 @@ label{
         };
         console.log(json);
 
-        $.post("http://ide50-samishabaneh.cs50.io:8081/compile", json, function(data, error, xhr) {
+        $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
 
             document.getElementById("output").innerHTML = data.output;
         });
