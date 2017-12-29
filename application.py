@@ -100,7 +100,7 @@ def change():
 @login_required
 def index():
 
-    return render_template("index.html")
+    return apology("News Will be here, GO to Practice")
 
 @app.route("/contests")
 @login_required
@@ -112,7 +112,6 @@ def contests():
 @app.route("/ladder")
 @login_required
 def ladder():
-    
     return apology("YOU BETTER USE THE STAIRS") 
 
 @app.route("/aboutus")
@@ -121,12 +120,17 @@ def aboutus():
     
     return apology("A TEAM OF HIGHLY TRAINED...") 
 
-@app.route("/practice")
+@app.route("/practice",methods=["POST","GET"])
 @login_required
 def practice():
     
-    return apology("FOR NOW USE CODEFORCES.COM") 
-    
+    if request.method == "POST":
+        if not request.form.get("select"):
+            flash("Choose PROBLEM!!")
+            return render_template("practice.html")
+        data=db.execute("SELECT * FROM problems WHERE header=:header",header=request.form.get("select"))
+        return render_template("practice.html",data=data)
+    return render_template("practice.html")    
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in."""

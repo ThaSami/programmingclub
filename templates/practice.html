@@ -71,6 +71,7 @@ textarea {
 h3 {
    border:1px black solid; 
 }
+
 </style>
 
 
@@ -79,36 +80,51 @@ h3 {
 
 {% block main %}
 
+{% if not data: %}
+      <form action="{{ url_for('practice') }}" method="post">
+       <div class="form-group center">
+           <select name="select" autofocus class="form-control">
+                  <option disabled selected value>Choose Problems</option> 
+                  
+                     
+                  <option value="Watermelon">WaterMelon EASY</option> 
+                  
+            </select>
+        </div>
+            
+        <div class="form-group">
+                <button class="blue btn btn-default" type="submit">Choose</button>
+        </div>
+        
+    </form>
+
+{% endif %}
+
+{% if data: %}
 <div class="questions">
     <div class="center">
-    <h1>Water Melon</h1>
-    <p>time limit per test : 1 second</p>
-    <p>memory limit per test : 64 megabytes</p>
-    <p>inputstandard : input</p>
-    <p>outputstandard : output</p>
+    <h1>{{data[0]["header"]}}</h1>
+    <p>time limit per test : {{data[0]["timelimit"]}} second</p>
+    <p>memory limit per test : {{data[0]["memorylimit"]}} megabytes</p>
+    <p>input standard : input</p>
+    <p>output standard : output</p>
     </div>
-    <p>One hot summer day Pete and his friend Billy decided to buy a watermelon. They chose the biggest and the ripest one, in their opinion. After that the watermelon was weighed, and the scales showed w kilos. They rushed home, dying of thirst, and decided to divide the berry, however they faced a hard problem.
-
-Pete and Billy are great fans of even numbers, that's why they want to divide the watermelon in such a way that each of the two parts weighs even number of kilos, at the same time it is not obligatory that the parts are equal. The boys are extremely tired and want to start their meal as soon as possible, that's why you should help them and find out, if they can divide the watermelon in the way they want. For sure, each of them should get a part of positive weight.
-</P>
-<b>Input</b>
-The first (and the only) input line contains integer number w (1 ≤ w ≤ 100) — the weight of the watermelon bought by the boys.
-
-<b>Output</b>
-Print YES, if the boys can divide the watermelon into two parts, each of them weighing even number of kilos; and NO in the opposite case.
-
+    <p>{{data[0]["explaination"]}}</P>
+<strong>Input</strong>
+<p>{{data[0]["inputExp"]}}</p>
+<strong>Output</strong>
+<p>{{data[0]["outputExp"]}}</p>
 <h4>Examples</h4>
 <div class="examples">
-    <h3>input</h3><br/>
-    <p class="input">8</p>
-    <h3>Output</h3><br/>
-    <p class="input">YES</p>
+    <h3>input</h3>
+    <p class="input">{{data[0]["stdinHelp"]}}</p>
+    <h3>Output</h3>
+    <p class="input">{{data[0]["outputHelp"]}}</p>
     
 </div>    
-<b>Note</b>
+<b>Note:</b>
 <p>
-For example, the boys can divide the watermelon into two parts of 2 and 6 kilos respectively (another variant — two parts of 4 and 4 kilos).
-
+{{data[0]["note"]}}
 </p>
 </div>
 
@@ -147,7 +163,10 @@ For example, the boys can divide the watermelon into two parts of 2 and 6 kilos 
     <input type="button" value="Submit" id="submit">
 </div>
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<div id="inputt">{{data[0]["stdin"]}}</div>
+<div id="expectedOutput">{{data[0]["expectedOutput"]}}</div>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     
@@ -173,22 +192,33 @@ For example, the boys can divide the watermelon into two parts of 2 and 6 kilos 
     //debug things
     console.log(e);
     console.log(lang);
+    
     // submit user given code
     $('#submit').on('click', function(){
         //get user code and 
        var codeF = editor.getValue();
-       var stdin = $('#stdin').val();
+       var stdin = $.trim($('#inputt').text());
+       var dataout = $.trim($('#expectedOutput').text());
+       console.log(stdin);
+       console.log(dataout);
+       for(var i in stdin){
     // passing the json file to the page 
         var json = {
             language: lang,
             code: codeF,
             stdin:stdin
         };
-       
-        
+        $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
+        if (data.ouput != dataout[i]){
+           // alert("Check again")
+            console.log("check again");
+            
+        }    
+          
+        });
+       }
+       //alert("good job")
     });
-    
-    
     
     
     
@@ -213,4 +243,5 @@ For example, the boys can divide the watermelon into two parts of 2 and 6 kilos 
     });
 
 </script>
+{% endif %}
 {% endblock %}
