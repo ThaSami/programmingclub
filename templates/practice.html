@@ -165,7 +165,7 @@ h3 {
 
 <div id="inputt">{{data[0]["stdin"]}}</div>
 <div id="expectedOutput">{{data[0]["expectedOutput"]}}</div>
-
+<div id="timelimit">{{data[0]["timelimit"]}}</div>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
@@ -177,6 +177,7 @@ h3 {
     run();
     var e;
     var lang;
+    var timelim=$('#timelimit').text();
     // Get selected Language
     function run(){
     e = $('#language option:selected').text();
@@ -206,6 +207,7 @@ h3 {
         var json = {
             language: lang,
             code: codeF,
+            timelimit:timelim,
             stdin:stdin
         };
         $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
