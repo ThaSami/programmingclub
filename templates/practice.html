@@ -214,7 +214,7 @@ h3 {
         var json = {
             language: lang,
             code: codeF,
-            timeout:timelim,
+            timeout:5,
             stdin:stdin
         };
         $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
