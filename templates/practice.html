@@ -182,6 +182,8 @@ h3 {
     var e;
     var lang;
     var timelim=$('#timelimit').text();
+    var timelim=parseInt(timelim);
+    console.log(typeof(timelim));
     // Get selected Language
     function run(){
     e = $('#language option:selected').text();
@@ -202,6 +204,7 @@ h3 {
     $('#submit').on('click', function(){
         //get user code and 
        var codeF = editor.getValue();
+       // trim whitespace 
        var stdin = $.trim($('#inputt').text());
        var dataout = $.trim($('#expectedOutput').text());
        console.log(stdin);
