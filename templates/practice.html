@@ -173,7 +173,7 @@ h3 {
     
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/python")
+    editor.session.setMode("ace/mode/python");
     run();
     var e;
     var lang;
@@ -188,7 +188,7 @@ h3 {
     // Get Selected Theme
     function theme(){
         var t=$('#theme option:selected').val();
-        editor.setTheme("ace/theme/"+t)
+        editor.setTheme("ace/theme/"+t);
     }
     //debug things
     console.log(e);
