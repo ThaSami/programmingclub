@@ -181,16 +181,16 @@ h3 {
     run();
     var e;
     var lang;
+     function run(){
+    e = $('#language option:selected').text();
+    editor.session.setMode("ace/mode/"+e);
+    lang = $('#language').val();
+    }
     var timelim=$('#timelimit').text();
     var timelim=parseInt(timelim);
     console.log(typeof(timelim));
     // Get selected Language
-    function run(){
-    e = $('#language option:selected').text();
-    editor.session.setMode("ace/mode/"+e);
-    lang = $('#language').val();
- 
-    }
+   
     // Get Selected Theme
     function theme(){
         var t=$('#theme option:selected').val();
@@ -200,36 +200,59 @@ h3 {
     console.log(e);
     console.log(lang);
     
+    
+    
     // submit user given code
     $('#submit').on('click', function(){
         //get user code and 
        var codeF = editor.getValue();
        // trim whitespace 
-       var stdin = $.trim($('#inputt').text());
-       var dataout = $.trim($('#expectedOutput').text());
-       console.log(stdin);
-       console.log(dataout);
-       for(var i in stdin){
-    // passing the json file to the page 
-        var json = {
+       var stdin =$('#inputt').text().replace(/\s/g, ",").split(',');
+       // trim whitespace
+       // expected useroutput
+       var dataout =$('#expectedOutput').text().replace(/\s/g, ",").split(',');
+        
+
+        console.log(stdin);
+        console.log(dataout);
+       var flag=false;
+       
+       //initlize variables
+       var i=0,length=stdin.length;
+
+    // calls the function
+    calls(i,stdin.length -  1);  
+    function calls(i,maxcalls){
+       
+        console.log(i , maxcalls);
+         var json = {
             language: lang,
             code: codeF,
-            timeout:5,
-            stdin:stdin
+            timeout:timelim,
+            stdin:stdin[i]
         };
-        $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
-        if (data.ouput != dataout[i]){
-           // alert("Check again")
-            console.log("check again");
-            
-        }    
-          
-        });
+        //break the recursive
+        if (i==maxcalls){
+            return;
+        }
+        // POST REQUEST WITH ASYNC OFF
+        $.ajax({
+        type: "POST",
+        url: "http://178.62.118.95:8081/compile",
+        data: json,
+        dataType: 'json',
+        cache: false,
+        async: false,
+        done :function(data) {
+                console.log(data.output);
+                
+                //here comes the fun part , Recursively
+                return calls(i+1,maxcalls);
        }
-       //alert("good job")
+
     });
-    
-    
+}
+});
     
     //COMPILE USER GIVEN CODE
     $('#send').on('click', function() {
@@ -240,7 +263,7 @@ h3 {
             language: lang,
             code: codeF,
             stdin:stdin,
-            timeout:5
+            timeout:timelim
         };
         //debug
         console.log(json);
