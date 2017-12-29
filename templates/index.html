@@ -11,9 +11,8 @@
 
 .codearea{
     width:500px;
-    height:640px;
+    height:670px;
     display: block;
-    border:1px solid black;
     position:relative;
     float:right;
 }
@@ -42,18 +41,37 @@ label{
   color:white;
   text-align:left;
 }
-
+#language{
+    float:right;
+}
 
 </style>
 
 
 {% endblock %}
-
+ 
 
 {% block main %}
 <div class="codearea">
+ <select id="language" autofocus class="form-control" onchange="run()">
+                     
+                  <option selected value="0">python</option> 
+                  <option value="1">Ruby</option> 
+                  <option value="2">Clojure</option> 
+                  <option value="3">php</option> 
+                  <option value="4">javascript</option> 
+                  <option value="6">GO</option> 
+                  <option value="7">c_cpp</option> 
+                  <option value="8">java</option> 
+                  <option value="9">VB.NET</option> 
+                  <option value="10">csharp</option> 
+                  <option value="11">BASH</option> 
+                  <option value="12">Objective-C</option> 
+                  <option value="13">PERL</option> 
+                  <option value="14">RUST</option> 
+</select>
 <pre id="editor">PRINT ("HELLO WORLD")</pre>
-
+  
 <label>STDIN:</label>
     <textarea id="stdin"></textarea>
 <label>Output:</label>
@@ -64,24 +82,36 @@ label{
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+    
+    
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/python");
+    editor.session.setMode("ace/mode/python")
+    run();
+    var e;
+    var lang;
+    function run(){
+    e = $('#language option:selected').text();
+    editor.session.setMode("ace/mode/"+e);
+    lang = $('#language').val();
+ 
+    }
     
-   
+    console.log(e);
+    console.log(lang);
     //COMPILE USER GIVEN CODE
     $('#send').on('click', function() {
         var codeF = editor.getValue();
         var stdin = $('#stdin').val();
 // passing the json file to the page 
         var json = {
-            language: 0,
+            language: lang,
             code: codeF,
             stdin:stdin
         };
         console.log(json);
 
-        $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
+        $.post("http://ide50-samishabaneh.cs50.io:8081/compile", json, function(data, error, xhr) {
 
             document.getElementById("output").innerHTML = data.output;
         });
