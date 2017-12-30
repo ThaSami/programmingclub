@@ -8,8 +8,6 @@ from functools import wraps
 
 def compilee(source):
     
-    RUN_URL = u'https://api.hackerearth.com/v3/code/run/'
-    CLIENT_SECRET = 'f917cae04619972b3c3a3bb62d6b1b59840be57d'
         
     if not source:
         raise RuntimeError("Missing Code or language")
