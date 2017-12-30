@@ -1,2 +1,5 @@
 Flask
 Flask-JSGlue
+Flask_session
+passlib
+requests

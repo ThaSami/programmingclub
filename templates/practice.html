@@ -11,7 +11,7 @@
 
 .codearea{
     width:500px;
-    height:670px;
+    height:690px;
     display: block;
     position:relative;
     float:right;
@@ -31,11 +31,11 @@ textarea {
 #stdin{
     color:white;
     width:100%;
-    height:75px;
+    height:70px;
 }
 #output{
   width:100%;
-  height:90px;
+  height:120px;
   background-color:black;
   color:white;
   text-align:left;
@@ -169,6 +169,7 @@ h3 {
 <div id="inputt">{{data[0]["stdin"]}}</div>
 <div id="expectedOutput">{{data[0]["expectedOutput"]}}</div>
 <div id="timelimit">{{data[0]["timelimit"]}}</div>
+<div id="test"></div>
  </div>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
@@ -179,9 +180,9 @@ h3 {
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/python");
     run();
-    var e;
-    var lang;
-     function run(){
+    var test,lang,e,codeF,i,length;
+    var flag=true;
+    function run(){
     e = $('#language option:selected').text();
     editor.session.setMode("ace/mode/"+e);
     lang = $('#language').val();
@@ -190,71 +191,90 @@ h3 {
     var timelim=parseInt(timelim);
     console.log(typeof(timelim));
     // Get selected Language
-   
+    var stdin =$('#inputt').text().replace(/\s/g, ",").split(',');
+    var dataout =$('#expectedOutput').text().replace(/\s/g, ",").split(',');
+
     // Get Selected Theme
     function theme(){
         var t=$('#theme option:selected').val();
         editor.setTheme("ace/theme/"+t);
     }
-    //debug things
-    console.log(e);
-    console.log(lang);
     
     
     
     // submit user given code
     $('#submit').on('click', function(){
-        //get user code and 
-       var codeF = editor.getValue();
-       // trim whitespace 
-       var stdin =$('#inputt').text().replace(/\s/g, ",").split(',');
-       // trim whitespace
-       // expected useroutput
-       var dataout =$('#expectedOutput').text().replace(/\s/g, ",").split(',');
-        
+     document.getElementById("output").innerHTML = "Testing ... ";
+     document.getElementById("test").innerHTML ="";
+        codeF = editor.getValue();
 
         console.log(stdin);
         console.log(dataout);
-       var flag=false;
-       
        //initlize variables
-       var i=0,length=stdin.length;
-
-    // calls the function
-    calls(i,stdin.length -  1);  
-    function calls(i,maxcalls){
        
-        console.log(i , maxcalls);
+    i=0;
+    length=stdin.length;
+    
+    calls(i,length);  
+
+    
+});
+
+ //function...
+    function calls(i,maxcalls){
+         console.log(i , maxcalls);
+        //break the recursive
+        
+        if (i==maxcalls){
+            console.log("Running Test Now");
+            var out =$('#test').text().replace(/\s/g, ",").split(',');
+            console.log(out)
+            for(var j=0;j<length;j++){
+                console.log(out[j],dataout[j]);
+                   if (out[j]!=dataout[j]){
+                       document.getElementById("output").innerHTML = "Test Failed at :" + " " +stdin[j]+ " Expected:" + " " +dataout[j];
+                       flag=false;
+                       break;
+                     }
+            }       
+            if (flag==true){
+                    document.getElementById("output").innerHTML="Success!";
+            }
+        return;
+        }
+       
          var json = {
             language: lang,
             code: codeF,
             timeout:timelim,
             stdin:stdin[i]
         };
-        //break the recursive
-        if (i==maxcalls){
-            return;
-        }
-        // POST REQUEST WITH ASYNC OFF
-        $.ajax({
-        type: "POST",
-        url: "http://178.62.118.95:8081/compile",
-        data: json,
-        dataType: 'json',
-        cache: false,
-        async: false,
-        done :function(data) {
-                console.log(data.output);
-                
-                //here comes the fun part , Recursively
-                return calls(i+1,maxcalls);
-       }
+        console.log(json);
+        //post request to that link and get the output
+        
+        $.post("http://178.62.118.95:8081/compile", json)
+        .success(function(data, error, xhr) {
+            console.log(data.output);
+                $("#test").append(data.output);
+                 calls(i+1,maxcalls);
+                if(!data.output){
+                document.getElementById("output").innerHTML="Compilation Error";
+                }
+        })
+        .fail(function(xhr, error, errorThrown) {
+
+        // log error to browser's console
+        console.log(errorThrown.toString());
 
     });
 }
-});
-    
+
+
+         
+
+      
     //COMPILE USER GIVEN CODE
+    
     $('#send').on('click', function() {
         var codeF = editor.getValue();
         var stdin = $('#stdin').val();
@@ -265,15 +285,21 @@ h3 {
             stdin:stdin,
             timeout:timelim
         };
-        //debug
-        console.log(json);
         //post request to that link and get the output
         
-        $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
+        $.post("http://178.62.118.95:8081/compile", json)
+        .success(function(data, error, xhr) {
+                document.getElementById("output").innerHTML=data.output;
+                if(!data.output){
+                document.getElementById("output").innerHTML="Compilation Error";
+                }
+        })
+        .fail(function(xhr, error, errorThrown) {
+        document.getElementById("output").innerHTML=errorThrown.toString();
 
-            document.getElementById("output").innerHTML = data.output;
-        });
+
     });
+});
 
 </script>
 {% endif %}
