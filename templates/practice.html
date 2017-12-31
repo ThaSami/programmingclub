@@ -11,7 +11,7 @@
 
 .codearea{
     width:500px;
-    height:690px;
+    height:699px;
     display: block;
     position:relative;
     float:right;
@@ -73,6 +73,10 @@ h3 {
 }
 .invis{
     visibility:hidden;
+}
+.btn{
+    
+    border:1px blue solid;
 }
 
 </style>
@@ -162,8 +166,8 @@ h3 {
     <textarea id="stdin"></textarea>
 <label>Output:</label>
     <p  id="output">Output of all tests appear here</p>
-    <input type="button" value="Compile" id="send">
-    <input type="button" value="Submit" id="submit">
+    <input type="button" value="Compile" id="send" class="btn btn-default">
+    <input type="button" value="Submit" id="submit" class="btn btn-default">
 </div>
 <div class="invis">
 <div id="inputt">{{data[0]["stdin"]}}</div>
@@ -257,7 +261,7 @@ h3 {
         console.log(json);
         //post request to that link and get the output
         
-        $.post("http://178.62.118.95:8081/compile", json)
+        $.post(Flask.url_for("compiler"), JSON.stringify(json))
         .success(function(data, error, xhr) {
             console.log(data.output);
                 $("#test").append(data.output);
@@ -269,8 +273,8 @@ h3 {
         .fail(function(xhr, error, errorThrown) {
 
         // log error to browser's console
-        console.log(errorThrown.toString());
-             calls(i,maxcalls);
+        document.getElementById("output").innerHTML=errorThrown.toString();
+            
     });
 }
 

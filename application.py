@@ -102,7 +102,7 @@ def change():
 @login_required
 def index():
 
-    return apology("News Will be here, GO to Practice")
+   return render_template("index.html")
 
 @app.route("/contests")
 @login_required

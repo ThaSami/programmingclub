@@ -5,212 +5,79 @@
 {% endblock %}
 
 {% block head %}
-     <script src="{{ url_for('custom_static4',filename='langs.js') }}"></script>
-
 <style>
-
-.codearea{
-    width:500px;
-    height:670px;
-    display: block;
-    position:relative;
-    float:right;
-border:1px black solid;
-}
-textarea {
-    resize: none;
-    background-color:black;
-    text-align:left;
-    
-}
-#editor{
-    width:100%;
-    height:360px;
-}
-
-#stdin{
-    color:white;
-    width:100%;
-    height:75px;
-}
-#output{
-  width:100%;
-  height:90px;
-  background-color:black;
-  color:white;
-  text-align:left;
-}
-
-.dropdowns > select{
-    float:right;
-	position: relative;
-	-webkit-transition: color 1s ease, background-color 1s ease;
-	-moz-transition: color 1s ease, background-color 1s ease;
-	-o-transition: color 1s ease, background-color 1s ease;
-	transition: color 1s ease, background-color 1s ease;
-}
-.dropdowns select:hover {
-    color: #FFFFFF;
-	background-color: #91A3C2;
-}
-.questions{
-    display:block;
-    float:left;
-    width:60%;
-    height:800px;
+.left{
     text-align:left;
 }
-.input{
-    color:red;
-    background-color:gray;
-    border:1px black solid;
+.black{
+    color:black;
 }
-.center{
-    text-align:center;
-}
-h3 {
-   border:1px black solid; 
+.blue{
+    color:blue;
 }
 </style>
-
-
 {% endblock %}
- 
 
 {% block main %}
+<header>
+    <h1>Short Guide To ComputerScience and Competetive Programming</h1>
+</header>
+<section class="left">
 
-<div class="questions">
-    <div class="center">
-    <h1>Water Melon</h1>
-    <p>time limit per test : 1 second</p>
-    <p>memory limit per test : 64 megabytes</p>
-    <p>inputstandard : input</p>
-    <p>outputstandard : output</p>
-    </div>
-    <p>One hot summer day Pete and his friend Billy decided to buy a watermelon. They chose the biggest and the ripest one, in their opinion. After that the watermelon was weighed, and the scales showed w kilos. They rushed home, dying of thirst, and decided to divide the berry, however they faced a hard problem.
+<h2><a href="https://www.edx.org/course/introduction-computer-science-harvardx-cs50x" class="black" >CS50</a></h2>
 
-Pete and Billy are great fans of even numbers, that's why they want to divide the watermelon in such a way that each of the two parts weighs even number of kilos, at the same time it is not obligatory that the parts are equal. The boys are extremely tired and want to start their meal as soon as possible, that's why you should help them and find out, if they can divide the watermelon in the way they want. For sure, each of them should get a part of positive weight.
-</P>
-<b>Input</b>
-The first (and the only) input line contains integer number w (1 ≤ w ≤ 100) — the weight of the watermelon bought by the boys.
-
-<b>Output</b>
-Print YES, if the boys can divide the watermelon into two parts, each of them weighing even number of kilos; and NO in the opposite case.
-
-<h4>Examples</h4>
-<div class="examples">
-    <h3>input</h3><br/>
-    <p class="input">8</p>
-    <h3>Output</h3><br/>
-    <p class="input">YES</p>
-    
-</div>    
-<b>Note</b>
+<hr/>
+<h3>About this course</h3>
 <p>
-For example, the boys can divide the watermelon into two parts of 2 and 6 kilos respectively (another variant — two parts of 4 and 4 kilos).
+This is CS50x, Harvard University's introduction to the intellectual enterprises of computer science and the art of programming for majors and non-majors alike, with or without prior programming experience. An entry-level course taught by David J. Malan, CS50x teaches students how to think algorithmically and solve problems efficiently. Topics include abstraction, algorithms, data structures, encapsulation, resource management, security, software engineering, and web development. Languages include C, Python, SQL, and JavaScript plus CSS and HTML. Problem sets inspired by real-world domains of biology, cryptography, finance, forensics, and gaming. As of Fall 2016, the on-campus version of CS50x, CS50, was Harvard's largest course.
+
+Students who earn a satisfactory score on 9 problem sets (i.e., programming assignments) and a final project are eligible for a certificate. This is a self-paced course–you may take CS50x on your own schedule.
 
 </p>
-</div>
 
-<div class="codearea">
-    <div class="dropdowns">
+<hr/>
+<h3>What you'll learn</h3>
+<ul>
+<li>A broad and robust understanding of computer science and programming</li>
+<li>How to think algorithmically and solve programming problems efficiently</li>
+<li>Concepts like abstraction, algorithms, data structures, encapsulation, resource management, security, software engineering, and web development</li>
+<li>Familiarity in a number of languages, including C, Python, SQL, and JavaScript plus CSS and HTML</li>
+<li>How to engage with a vibrant community of like-minded learners from all levels of experience</li>
+<li>How to develop and present a final programming project to your peers</li>
 
- <select id="language" autofocus class="form-control" onchange="run()">
-                     
-                  <option selected value="0">python</option> 
-                  <option value="1">ruby</option> 
-                  <option value="2">clojure</option> 
-                  <option value="3">php</option> 
-                  <option value="4">javascript</option> 
-                  <option value="6">golang</option> 
-                  <option value="7">c_cpp</option> 
-                  <option value="8">java</option> 
-                  <option value="10">csharp</option> 
-                  <option value="12">objectivec</option> 
-                  <option value="13">perl</option> 
-                  <option value="14">rust</option> 
-</select>
- <select id="theme" class="form-control" onchange="theme()">
-     <option selected disabled>Theme</option>
-     <option value="github">Light</option>
-     <option value="twilight">Dark</option>
+<hr/>
+ <iframe width="500" height="400" src="https://www.youtube.com/embed/5dFxQRcsKpw" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+</ul>
 
- </select>    
-</div>
-<pre id="editor">PRINT ("HELLO WORLD")</pre>
-  
-<label>STDIN:</label>
-    <textarea id="stdin"></textarea>
-<label>Output:</label>
-    <p  id="output">Output of all tests appear here</p>
-    <input type="button" value="Compile" id="send">
-    <input type="button" value="Submit" id="submit">
-</div>
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript">
-    
-    
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/python")
-    run();
-    var e;
-    var lang;
-    // Get selected Language
-    function run(){
-    e = $('#language option:selected').text();
-    editor.session.setMode("ace/mode/"+e);
-    lang = $('#language').val();
- 
-    }
-    // Get Selected Theme
-    function theme(){
-        var t=$('#theme option:selected').val();
-        editor.setTheme("ace/theme/"+t)
-    }
-    //debug things
-    console.log(e);
-    console.log(lang);
-    // submit user given code
-    $('#submit').on('click', function(){
-        //get user code and 
-       var codeF = editor.getValue();
-       var stdin = $('#stdin').val();
-    // passing the json file to the page 
-        var json = {
-            language: lang,
-            code: codeF,
-            stdin:stdin
-        };
-       
-        
-    });
-    
-    
-    
-    
-    
-    //COMPILE USER GIVEN CODE
-    $('#send').on('click', function() {
-        var codeF = editor.getValue();
-        var stdin = $('#stdin').val();
-    // passing the json file to the page 
-        var json = {
-            language: lang,
-            code: codeF,
-            stdin:stdin
-        };
-        //debug
-        console.log(json);
-        //post request to that link and get the output
-        
-        $.post("http://178.62.118.95:8081/compile", json, function(data, error, xhr) {
-
-            document.getElementById("output").innerHTML = data.output;
-        });
-    });
-
-</script>
+</section>
+<br/>
+<hr/>
+<section class="left">
+<h2>Introduction to computer Science using python</h2>
+<h3>About this course</h3>
+<p>This course is the first of a two-course sequence: Introduction to Computer Science and Programming Using Python, and Introduction to Computational Thinking and Data Science. Together, they are designed to help people with no prior exposure to computer science or programming learn to think computationally and write programs to tackle useful problems. Some of the people taking the two courses will use them as a stepping stone to more advanced computer science courses, but for many it will be their first and last computer science courses. This run features updated lecture videos, lecture exercises, and problem sets to use the new version of Python 3.5. Even if you took the course with Python 2.7, you will be able to easily transition to Python 3.5 in future courses, or enroll now to refresh your learning.
+<br/>
+Since these courses may be the only formal computer science courses many of the students take, we have chosen to focus on breadth rather than depth. The goal is to provide students with a brief introduction to many topics so they will have an idea of what is possible when they need to think about how to use computation to accomplish some goal later in their career. That said, they are not "computation appreciation" courses. They are challenging and rigorous courses in which the students spend a lot of time and effort learning to bend the computer to their will.</p>
+<hr/>
+<h2>What you will learn:</h2>
+<ul>
+    <li>A Notion of computation</li>
+<li>The Python programming language</li>
+<li>Some simple algorithms</li>
+<li>Testing and debugging</li>
+<li>An informal introduction to algorithmic complexity</li>
+<li>Data structures</li>
+</ul>
+<iframe width="500" height="400" src="https://www.youtube.com/embed/ww2BdhILIio" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+</section>
+<br/>
+<hr/>
+<section class="left">
+    <h2>Books:</h2>
+    <ul class="black">
+        <li><a href="https://cses.fi/book.html" class="blue">Competetive Programming Handbook</a></li>
+        <li><a href="http://www.crackingthecodinginterview.com/" class="blue">Crack the Interview code</a></li>
+    </ul>
+</section>
 {% endblock %}
