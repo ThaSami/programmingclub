@@ -125,6 +125,7 @@ def aboutus():
     return apology("Motivated Students From University Of Jordan / AMMAN") 
 
 @app.route("/practice",methods=["POST","GET"])
+@login_required
 def practice():
     
     if request.method == "POST":
@@ -139,15 +140,13 @@ def practice():
 #compile
 @app.route("/compiler",methods=["POST"])
 @login_required
-
 def compiler():
     
     if request.method=="POST":
         url="http://178.62.118.95:8081/compile"
         content=request.get_json(force=True)
-        print(content)
+        
         r=requests.post(url,json=content,headers={'Content-type':'application/json'})
-        print(r)
         return jsonify(r.json())
     raise  "something wrong"
     
