@@ -1,0 +1,10 @@
+Please note , in order to make final project run you need to:
+install all requirements including nodejs and npm..
+head to static/API 
+configure app.js change the port there !
+then ' sudo nodejs app.js '
+
+configure practice.html , there is a script which POST request to url, alter that to the url which nodejs running to.
+you may not reupload the project anywhere!
+all the copy-rights things in design removed temporary, and will be added/paid whenever the project go live on domain. 
+you may check project here if it was running. http://178.62.118.95

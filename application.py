@@ -9,6 +9,7 @@ from datetime import datetime
 from helpers import *
 from flask_jsglue import JSGlue
 import requests
+import json
 
 # configure application
 app = Flask(__name__)
@@ -114,14 +115,16 @@ def contests():
 def ladder():
     return apology("YOU BETTER USE THE STAIRS") 
 
+
+
+
 @app.route("/aboutus")
 @login_required
 def aboutus():
     
-    return apology("A TEAM OF HIGHLY TRAINED...") 
+    return apology("Motivated Students From University Of Jordan / AMMAN") 
 
 @app.route("/practice",methods=["POST","GET"])
-@login_required
 def practice():
     
     if request.method == "POST":
@@ -131,6 +134,25 @@ def practice():
         data=db.execute("SELECT * FROM problems WHERE header=:header",header=request.form.get("select"))
         return render_template("practice.html",data=data)
     return render_template("practice.html")    
+    
+    
+#compile
+@app.route("/compiler",methods=["POST"])
+@login_required
+
+def compiler():
+    
+    if request.method=="POST":
+        url="http://178.62.118.95:8081/compile"
+        content=request.get_json(force=True)
+        print(content)
+        r=requests.post(url,json=content,headers={'Content-type':'application/json'})
+        print(r)
+        return jsonify(r.json())
+    raise  "something wrong"
+    
+    
+    
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in."""

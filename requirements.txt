@@ -3,3 +3,4 @@ Flask-JSGlue
 Flask_session
 passlib
 requests
+cs50
