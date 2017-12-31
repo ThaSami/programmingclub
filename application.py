@@ -30,6 +30,7 @@ def after_request(response):
 # configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
+app.config["JSONIFY_PRETTYPRINT_REGULAR"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['src-noconflict']="ace-builds/src-noconflict"
 app.config['static2']="static/register"
