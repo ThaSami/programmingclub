@@ -144,9 +144,13 @@ def practice():
 def compiler():
     
     if request.method=="POST":
+        rows = db.execute("SELECT * FROM user WHERE user_id = :id",id=session["user_id"])
+        if not rows:
+            raise RuntimeError("bad request")
         url="http://178.62.118.95:8081/compile"
         content=request.get_json(force=True)
-        
+        content['client_secret']='asdj3q49fjlk345809sfslkdj54039534054#%#@!#()#%$()*^)%$*&)^(&)&()*#@$%)DFDS)*W$KL#$K@LDFGLML$'
+
         r=requests.post(url,json=content,headers={'Content-type':'application/json'})
         return jsonify(r.json())
     raise  "something wrong"

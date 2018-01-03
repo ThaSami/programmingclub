@@ -31,7 +31,7 @@ app.use(bodyParser());
 app.all('*', function(req, res, next) 
 {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Methods', 'POST');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
     next();
@@ -50,11 +50,13 @@ app.post('/compile',bruteforce.prevent,function(req, res)
     var code = req.body.code;
     var stdin = req.body.stdin;
     var timeout_value=req.body.timeout;//Timeout Value, In Seconds
-    
+    var secret=req.body.client_secret;
     var folder= 'temp/' + random(10); //folder in which the temporary folder will be saved
     var path=__dirname+"/"; //current working path
     var vm_name='virtual_machine'; //name of virtual machine that we want to execute
-    
+    if (secret!='asdj3q49fjlk345809sfslkdj54039534054#%#@!#()#%$()*^)%$*&)^(&)&()*#@$%)DFDS)*W$KL#$K@LDFGLML$%'){
+        res.send({output:"FUCK YOUR SELF! NEVER TRY", langid: "fuck ur self",code:"fuck ur self", errors:err, time:"fuck ur self"});
+    }
 
     //details of this are present in DockerSandbox.js
     var sandboxType = new sandBox(timeout_value,path,folder,vm_name,arr.compilerArray[language][0],arr.compilerArray[language][1],code,arr.compilerArray[language][2],arr.compilerArray[language][3],arr.compilerArray[language][4],stdin);
