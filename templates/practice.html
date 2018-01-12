@@ -93,9 +93,9 @@ h3 {
            <select name="select" autofocus class="form-control">
                   <option disabled selected value>Choose Problems</option> 
                   
-                     
-                  <option value="Watermelon">Watermelon Easy</option> 
-                  <option value="A. Cut Ribbon">A. Cut Ribbon Easy</option>
+                  {% for question in questions %}
+                  <option value="{{question["header"]}}">{{question["header"]}}</option> 
+                 {% endfor %}
             </select>
         </div>
             
@@ -233,8 +233,9 @@ h3 {
 
         if (i==maxcalls){
             console.log("Running Test Now");
-            var out =$('#test').text().replace(/\s/g, ",").split(',');
+            var out =$('#test').text().replace(/(\r\n|\n|\r)/gm,"").split(',');
             console.log(out)
+            flag=true;
             for(var j=0;j<length;j++){
                 console.log(out[j],dataout[j]);
                    if (out[j]!=dataout[j]){
@@ -255,7 +256,7 @@ h3 {
          var json = {
             language: lang,
             code: codeF,
-            timeout:timelim,
+            timeout:4,
             stdin:stdin[i]
         };
         console.log(json);
@@ -263,15 +264,19 @@ h3 {
         
         $.post(Flask.url_for("compiler"), JSON.stringify(json))
         .success(function(data, error, xhr) {
-            console.log(data.output);
-                $("#test").append(data.output);
+            console.log(data);
+                $("#test").append(data.output+",");
                  calls(i+1,maxcalls);
+                 if(data.time>timelim){
+                      document.getElementById("output").innerHTML="Timed out";
+                 }
                 if(!data.output){
                 document.getElementById("output").innerHTML="Compilation Error";
+                
                 }
         })
         .fail(function(xhr, error, errorThrown) {
-
+        
         // log error to browser's console
         document.getElementById("output").innerHTML=errorThrown.toString();
             
@@ -292,12 +297,13 @@ h3 {
             language: lang,
             code: codeF,
             stdin:stdin,
-            timeout:timelim
+            timeout:4
         };
         //post request to that link and get the output
         
         $.post(Flask.url_for("compiler"), JSON.stringify(json))
         .success(function(data, error, xhr) {
+                console.log(data);
                 document.getElementById("output").innerHTML=data.output;
                 if(!data.output){
                 document.getElementById("output").innerHTML="Compilation Error";

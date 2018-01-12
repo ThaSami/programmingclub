@@ -135,7 +135,9 @@ def practice():
             return render_template("practice.html")
         data=db.execute("SELECT * FROM problems WHERE header=:header",header=request.form.get("select"))
         return render_template("practice.html",data=data)
-    return render_template("practice.html")    
+        
+    questions=db.execute("SELECT header FROM problems")
+    return render_template("practice.html",questions=questions)    
     
     
 #compile
