@@ -36,7 +36,7 @@ textarea {
 #output{
   width:100%;
   height:120px;
-  background-color:black;
+  background-color:#141414;
   color:white;
   text-align:left;
 }
@@ -118,7 +118,7 @@ h3 {
     </div>
     <p>{{data[0]["explaination"] | safe}}</P>
 <strong>Input</strong>
-<p>{{data[0]["inputExp"]}}</p>
+<p>{{data[0]["inputExp"] | safe}}</p>
 <strong>Output</strong>
 <p>{{data[0]["outputExp"]}}</p>
 <h4>Examples</h4>
@@ -190,6 +190,8 @@ h3 {
     e = $('#language option:selected').text();
     editor.session.setMode("ace/mode/"+e);
     lang = $('#language').val();
+    if (lang==0) editor.setValue("print \"Hello\"",-1);
+    if (lang==7) editor.setValue("#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout<<\"Hello\";\n\treturn 0;\n}",-1);
     }
     var timelim=$('#timelimit').text();
     var timelim=parseInt(timelim);
@@ -256,7 +258,7 @@ h3 {
          var json = {
             language: lang,
             code: codeF,
-            timeout:4,
+            timeout:10,
             stdin:stdin[i]
         };
         console.log(json);
@@ -270,8 +272,8 @@ h3 {
                  if(data.time>timelim){
                       document.getElementById("output").innerHTML="Timed out";
                  }
-                if(!data.output){
-                document.getElementById("output").innerHTML="Compilation Error";
+                if(data.errors){
+                document.getElementById("output").innerHTML=data.errors;
                 
                 }
         })
@@ -297,7 +299,7 @@ h3 {
             language: lang,
             code: codeF,
             stdin:stdin,
-            timeout:4
+            timeout:10
         };
         //post request to that link and get the output
         
@@ -305,8 +307,8 @@ h3 {
         .success(function(data, error, xhr) {
                 console.log(data);
                 document.getElementById("output").innerHTML=data.output;
-                if(!data.output){
-                document.getElementById("output").innerHTML="Compilation Error";
+                if(data.errors){
+                document.getElementById("output").innerHTML=data.errors;
                 }
         })
         .fail(function(xhr, error, errorThrown) {
