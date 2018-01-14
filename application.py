@@ -104,12 +104,14 @@ def index():
 
    return render_template("index.html")
 
-@app.route("/contests")
+@app.route("/contests",methods=["POST","GET"])
 @login_required
 def contests():
-    
-    
-    return apology("TO BE ANNOUNCED") 
+   if request.method == "POST":
+       if not request.form.get("ContestPass"):
+           flash("Please Enter a password")
+           return render_template("contests.html")
+   return render_template("contests.html")
 
 @app.route("/ladder")
 @login_required

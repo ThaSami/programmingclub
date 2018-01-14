@@ -165,7 +165,7 @@ h3 {
 <label>STDIN:</label>
     <textarea id="stdin"></textarea>
 <label>Output:</label>
-    <p  id="output">Output of all tests appear here</p>
+    <textarea  id="output" disabled>Output of all tests appear here</textarea>
     <input type="button" value="Compile" id="send" class="btn btn-default">
     <input type="button" value="Submit" id="submit" class="btn btn-default">
 </div>
@@ -175,6 +175,10 @@ h3 {
 <div id="timelimit">{{data[0]["timelimit"]}}</div>
 <div id="test"></div>
  </div>
+ 
+ 
+ 
+ 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
