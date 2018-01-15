@@ -250,7 +250,7 @@ def register():
         insertion = db.execute("INSERT INTO user (user_name,user_password,user_email,user_univID) VALUES(:username,:hash,:email,:univID)",username=request.form.get("username"),hash=pwd_context.hash(request.form.get("password")),email=request.form.get("email"),univID=request.form.get("univid"))
         
         if not insertion:
-         return apology("Username/Email is already Exist")
+            return apology("Username/Email is already Exist")
     
         rows = db.execute("SELECT * FROM user WHERE user_name = :username", username=request.form.get("username"))
           # remember which user has logged in
