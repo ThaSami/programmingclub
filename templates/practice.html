@@ -203,7 +203,6 @@ h3 {
     }
     var timelim=$('#timelimit').text();
     var timelim=parseInt(timelim);
-    console.log(typeof(timelim));
     // Get selected Language
     var stdin =$('#inputt').text().split(',');
     var dataout =$('#expectedOutput').text().split(',');
@@ -222,8 +221,6 @@ h3 {
      document.getElementById("test").innerHTML ="";
         codeF = editor.getValue();
 
-        console.log(stdin);
-        console.log(dataout);
        //initlize variables
        
     i=0;
@@ -312,7 +309,6 @@ h3 {
         
         $.post(Flask.url_for("compiler"), JSON.stringify(json))
         .success(function(data, error, xhr) {
-                console.log(data);
                 document.getElementById("output").innerHTML=data.output;
                 if(data.errors){
                 document.getElementById("output").innerHTML=data.errors;
