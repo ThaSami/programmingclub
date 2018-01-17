@@ -101,9 +101,15 @@ def change():
 @app.route("/")
 @login_required
 def index():
-
    return render_template("index.html")
 
+@app.route("/compilearea",methods=["POST","GET"])
+@login_required
+def compilearea():
+
+   return render_template("compilearea.html")
+   
+   
 @app.route("/contests",methods=["POST","GET"])
 @login_required
 def contests():
