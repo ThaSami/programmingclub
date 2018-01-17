@@ -236,7 +236,6 @@ h3 {
 
  //function...
     function calls(i,maxcalls){
-         console.log(i , maxcalls);
         //break the recursive
          $("#submit").prop('disabled', true);
         $("#send").prop('disabled', true);
@@ -244,7 +243,6 @@ h3 {
         if (i==maxcalls){
             console.log("Running Test Now");
             var out =$('#test').text().replace(/(\r\n|\n|\r)/gm,"").split(',');
-            console.log(out)
             flag=true;
             for(var j=0;j<length;j++){
                 console.log(out[j],dataout[j]);
@@ -269,27 +267,28 @@ h3 {
             timeout:10,
             stdin:stdin[i]
         };
-        console.log(json);
         //post request to that link and get the output
         
         $.post(Flask.url_for("compiler"), JSON.stringify(json))
         .success(function(data, error, xhr) {
-            console.log(data);
                 $("#test").append(data.output+",");
-                 calls(i+1,maxcalls);
                  if(data.time>timelim){
                       document.getElementById("output").innerHTML="Timed out";
+                     return;
                  }
                 if(data.errors){
                 document.getElementById("output").innerHTML=data.errors;
-                
+                    return;
                 }
+        calls(i+1,maxcalls);
+
+            
         })
         .fail(function(xhr, error, errorThrown) {
         
         // log error to browser's console
         document.getElementById("output").innerHTML=errorThrown.toString();
-            
+        return;    
     });
 }
 
