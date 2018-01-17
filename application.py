@@ -220,7 +220,9 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
    
-    
+    if session:
+        return redirect(url_for("index"))
+        
     # if user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
@@ -265,6 +267,6 @@ def register():
         flash('You were successfully Registerd!')
         # redirect user to home page
         return redirect(url_for("index"))
-        
+    
     else:
-        return render_template("register.html")
+            return render_template("register.html")
