@@ -15,6 +15,11 @@
     padding-top:5px;
 
 }
+
+.navbar-collapse{
+    font-size:large;
+    background-color:#000;
+}
 .navbar-default .navbar-nav li a{
     color:white;
 }
