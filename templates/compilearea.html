@@ -1,0 +1,190 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    compilearea
+{% endblock %}
+
+{% block head %}
+     <script src="{{ url_for('custom_static4',filename='langs.js') }}"></script>
+
+<style>
+
+.codearea{
+    width:98%;
+    height:90%;
+    display: block;
+    position:relative;
+}
+
+textarea {
+    resize: none;
+    background-color:#141414;
+    text-align:left;
+    
+}
+#editor{
+    width:100%;
+    height:300px;
+}
+
+#stdin{
+    color:white;
+    width:100%;
+    height:70px;
+}
+#output{
+  width:100%;
+  height:120px;
+  background-color:#141414;
+  color:white;
+  text-align:left;
+}
+
+.dropdowns > select{
+    float:right;
+	position: relative;
+	-webkit-transition: color 1s ease, background-color 1s ease;
+	-moz-transition: color 1s ease, background-color 1s ease;
+	-o-transition: color 1s ease, background-color 1s ease;
+	transition: color 1s ease, background-color 1s ease;
+}
+.dropdowns select:hover {
+    color: #FFFFFF;
+	background-color: #91A3C2;
+}
+.questions{
+    display:block;
+    float:left;
+    width:55%;
+    height:800px;
+    text-align:left;
+}
+.input{
+    color:red;
+    background-color:#F0F0F0;
+    border:1px black solid;
+}
+label{
+    text-align:left;
+}
+.left{
+float:left;
+    
+}
+h3 {
+   border:1px black solid; 
+}
+.invis{
+    visibility:hidden;
+}
+.btn{
+    
+    border:1px blue solid;
+}
+.container>main{
+    padding-left:20px;
+}
+</style>
+
+
+{% endblock %}
+ 
+
+{% block main %}
+
+<div class="codearea left">
+ <div class="dropdowns left">
+ <select id="theme" class="form-control" onchange="theme()">
+     <option selected disabled>Theme</option>
+     <option value="github">Light</option>
+     <option value="twilight">Dark</option>
+
+ </select>   
+ <select id="language" autofocus class="form-control" onchange="run()">
+                     
+                  <option selected value="0">python</option> 
+                  <option value="1">ruby</option> 
+                  <option value="2">clojure</option> 
+                  <option value="3">php</option> 
+                  <option value="4">javascript</option> 
+                  <option value="6">golang</option> 
+                  <option value="7">c_cpp</option> 
+                  <option value="8">java</option> 
+                  <option value="10">csharp</option> 
+                  <option value="12">objectivec</option> 
+                  <option value="13">perl</option> 
+                  <option value="14">rust</option> 
+</select>
+ 
+</div>
+<pre id="editor">print ("HELLO WORLD")</pre>
+  
+<label class="left">INPUT:</label>
+    <textarea id="stdin"></textarea>
+<label class="left">Output:</label>
+    <textarea  id="output" disabled>Output of all tests appear here</textarea>
+    <input type="button" value="Compile" id="send" class="btn btn-default">
+</div>
+
+ 
+ 
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    
+    
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+    editor.session.setMode("ace/mode/python");
+    run();
+    var test,lang,e,codeF,i,length;
+    function run(){
+    e = $('#language option:selected').text();
+    editor.session.setMode("ace/mode/"+e);
+    lang = $('#language').val();
+    if (lang==0) editor.setValue("print \"Hello\"",-1);
+    if (lang==7) editor.setValue("#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout<<\"Hello\";\n\treturn 0;\n}",-1);
+    if (lang==8) editor.setValue("// java exmple code\n\n//this will import required libraries\nimport java.util.*;\n\nclass Main{\n\npublic static void main(String args[]){\n\n\t//this will print hello wrold\n\tSystem.out.println(\"Hello World\");\n\n\t// this will read INTEGER FROM USERINPUT\n\tScanner input=new Scanner(System.in);\n\tint b = input.nextInt();\n\n\t// this will print the user input\n\tSystem.out.println(b);\n\n}\n}\n\n//Please Input a number to see how the code works!!",-1);
+
+    }
+
+    // Get Selected Theme
+    function theme(){
+        var t=$('#theme option:selected').val();
+        editor.setTheme("ace/theme/"+t);
+    }
+      
+    //COMPILE USER GIVEN CODE
+    
+    $('#send').on('click', function() {
+        $("#send").prop('disabled', true);
+        var codeF = editor.getValue();
+        var stdin = $('#stdin').val();
+    // passing the json file to the page 
+        var json = {
+            language: lang,
+            code: codeF,
+            stdin:stdin,
+            timeout:10
+        };
+        //post request to that link and get the output
+        
+        $.post(Flask.url_for("compiler"), JSON.stringify(json))
+        .success(function(data, error, xhr) {
+                document.getElementById("output").innerHTML=data.output;
+                if(data.errors){
+                document.getElementById("output").innerHTML=data.errors;
+                }
+               $("#send").prop('disabled', false);
+        })
+        .fail(function(xhr, error, errorThrown) {
+        document.getElementById("output").innerHTML=errorThrown.toString();
+       $("#send").prop('disabled', false);
+
+
+    });
+});
+
+</script>
+{% endblock %}
