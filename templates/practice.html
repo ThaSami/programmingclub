@@ -112,7 +112,7 @@ h3 {
 {% if data: %}
 <div class="questions">
     <div class="center">
-    <h1>{{data[0]["header"]}}</h1>
+    <h1 id="name">{{data[0]["header"]}}</h1>
     <p>time limit per test : {{data[0]["timelimit"]}} second</p>
     <p>memory limit per test : {{data[0]["memorylimit"]}} megabytes</p>
     <p>input standard : standard input</p>
@@ -251,6 +251,16 @@ h3 {
             }       
             if (flag==true){
                     document.getElementById("output").innerHTML="Success!";
+                             
+                 var solvedd = {
+                    name:$('#name').text()
+                };
+        //post request to that link and get the output
+                
+                $.post(Flask.url_for("solved"), JSON.stringify(solvedd))
+                .success(function(data, error, xhr) {
+                             alert("Question Solved Congrats!!");
+                         });
             }
         $("#submit").prop('disabled', false);
         $("#send").prop('disabled', false);
@@ -277,7 +287,7 @@ h3 {
                 document.getElementById("output").innerHTML=data.errors;
                     return;
                 }
-        calls(i+1,maxcalls);
+                    calls(i+1,maxcalls);
 
             
         })

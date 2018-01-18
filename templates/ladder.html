@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+{% block head %}
+<style>
+ .container>main{
+    padding-left:20px;
+    width: 80%;
+}
+</style>
+
+{% endblock %}
+
+{% block main %}
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>Ranked</th>
+    <th>User Name</th>
+    <th>Problem Solved</th>
+  
+  </tr>
+</thead>    
+<tbody>
+ {% set count = [0] %}
+
+ {% for user in data %}
+     {% if count.append(count.pop() + 1) %}
+     {% endif %}
+    <tr>
+        <td> {{ count }}</td>
+        <td>{{user["user_name"]}}</td>
+        <td>{{user["summation"]}}</td>
+    </tr>
+        
+ {% endfor %}   
+       
+    
+</tbody>
+</table>
+
+
+{% endblock %}

@@ -10,6 +10,7 @@ from helpers import *
 from flask_jsglue import JSGlue
 import requests
 import json
+from operator import itemgetter
 
 # configure application
 app = Flask(__name__)
@@ -122,7 +123,12 @@ def contests():
 @app.route("/ladder")
 @login_required
 def ladder():
-    return apology("YOU BETTER USE THE STAIRS") 
+    rows=db.execute("SELECT * FROM solvedProblems")
+    data=[]
+    for item in rows:
+        data.append(dict({'user_name':item["user_name"],'summation':sum(i for i in item.values() if isinstance(i, int))}))
+    data = sorted(data, key=itemgetter('summation'),reverse=True)
+    return render_template("ladder.html",data=data) 
 
 
 
@@ -203,6 +209,25 @@ def login():
     else:
         return render_template("login.html")
 
+@app.route("/solved",methods=["POST"])
+@login_required
+def solved():
+    if request.method=="POST":
+        content=request.get_json(force=True)
+        name=db.execute("SELECT user_name FROM user WHERE user_id=:id",id=session["user_id"])
+        check=db.execute("SELECT user_name FROM solvedProblems WHERE user_name=:name",name=name[0]["user_name"])
+        if not check:
+            db.execute("INSERT INTO solvedProblems(:problem,user_name) VALUES(1,:name) ",problem=content["name"],name=name[0]["user_name"])
+        else:
+            check2=db.execute("SELECT * FROM solvedProblems WHERE user_name=:name",name=name[0]["user_name"])
+            if check2[0][content["name"]]==0:
+                db.execute("UPDATE solvedProblems SET :problem VALUES(1) WHERE user_name=:name",problem=content["name"],name=name[0]["user_name"])
+            else:
+                return "SOLVED"
+            
+        return "SOLVED"
+    raise "ERROR"    
+        
 @app.route("/logout")
 def logout():
     """Log user out."""
@@ -220,9 +245,7 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
    
-    if session:
-        return redirect(url_for("index"))
-        
+    session.clear()
     # if user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
@@ -246,7 +269,8 @@ def register():
         
         elif request.form.get("password") != request.form.get("password2"):
             return apology("Passwords don't match")
-    
+        elif len(request.form.get("password")) < 8:
+            return apology("Password too short")
         rows = db.execute("SELECT * FROM user WHERE user_name = :username OR user_email= :email OR user_univID = :univid", username=request.form.get("username"),email=request.form.get("email"),univid=request.form.get("univid"))
         if rows:
             if request.form.get("username") == rows[0]["user_name"]:

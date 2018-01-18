@@ -63,6 +63,25 @@ main .form-control
     width: auto;
 }
 
+main{
+    overflow-x: auto;
+    text-align: center;
+}
+
+main td
+{
+    /* left-align tables' cells */
+    text-align: left;
+}
+main table {
+    text-align: left;
+}
+
+main tfoot
+{
+    /* boldface tables' footers */
+    font-weight: bold;
+}
 .footer {
     position: fixed;
     left: 0;
