@@ -221,7 +221,7 @@ def solved():
         else:
             check2=db.execute("SELECT * FROM solvedProblems WHERE user_name=:name",name=name[0]["user_name"])
             if check2[0][content["name"]]==0:
-                db.execute("UPDATE solvedProblems SET :problem VALUES(1) WHERE user_name=:name",problem=content["name"],name=name[0]["user_name"])
+                db.execute("UPDATE solvedProblems SET :problem=1 WHERE user_name=:name",problem=content["name"],name=name[0]["user_name"])
             else:
                 return "SOLVED"
             
