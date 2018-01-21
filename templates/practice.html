@@ -319,7 +319,7 @@ h3 {
         
         $.post(Flask.url_for("compiler"), JSON.stringify(json))
         .success(function(data, error, xhr) {
-                document.getElementById("output").innerHTML=data.output;
+                document.getElementById("output").innerHTML=data.output + '\n' +'-----------------' +'\n'+ 'Execution Time : ' + data.time;
                 if(data.errors){
                 document.getElementById("output").innerHTML=data.errors;
                 }
