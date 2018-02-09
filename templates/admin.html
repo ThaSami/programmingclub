@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    admin
+{% endblock %}
+
+{% block main %}
+    <form action="{{ url_for('contests') }}" method="post">
+        
+         <div class="form-group center">
+           <select name="admin" autofocus class="form-control">
+                  <option disabled selected value>Choose method</option> 
+                   <option value="Start">Start Contest!</option> 
+                  <option value="Stop">Stop Contest</option> 
+                  <option value="Reset">RESET!</option> 
+            </select>
+        </div>
+        <div class="form-group">
+                <button class="blue btn btn-default" type="submit">Choose</button>
+        </div>
+    </form>
+{% endblock %}

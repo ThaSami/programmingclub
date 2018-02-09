@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Contest
+    Practice
 {% endblock %}
 
 {% block head %}
@@ -12,7 +12,6 @@
 .codearea{
     width:100%;
     position:relative;
-    float:right;
     border:1px black solid;
 }
 textarea {
@@ -38,7 +37,6 @@ textarea {
   color:white;
   text-align:left;
 }
-
 .dropdowns > select{
     float:right;
 	position: relative;
@@ -53,7 +51,6 @@ textarea {
 }
 .questions{
     display:block;
-    float:left;
     text-align:left;
 }
 .input{
@@ -61,11 +58,12 @@ textarea {
     background-color:#F0F0F0;
     border:1px black solid;
 }
-.center{
+.centerarea{
+    display:block;
     text-align:center;
 }
-h3 {
-   border:1px black solid; 
+.center{
+    text-align:center;
 }
 .invis{
     visibility:hidden;
@@ -77,6 +75,9 @@ h3 {
 .container>main{
     padding-left:20px;
 }
+a{
+    color:black;
+}
 </style>
 
 
@@ -85,63 +86,13 @@ h3 {
 
 {% block main %}
 
-{% if not data: %}
-<h1 class=Center>Quitters Never Win and Winners Never QUIT!</h1>
-      <form action="{{ url_for('contests') }}" method="post">
-       <div class="form-group center">
-           <select name="select" autofocus class="form-control">
-                  <option disabled selected value>Choose Problem!</option> 
-                  
-                  {% for question in questions %}
-                  <option value="{{question["header"]}}">{{question["header"]}}</option> 
-                 {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-                <button class="blue btn btn-default" type="submit">Choose</button>
-        </div>
-    </form>
+{% if tutorial %}
+<div class="questions">
+{{tutorial[0]["exp"] | safe}}
+</div>
 {% endif %}
 
-
-
-
-
-{% if data: %}
-<div class="container-fluid">
-<div class="row">
-<div class="col-md-8">
-<div class="questions">
-    <div class="center">
-    <h1 id="name">{{data[0]["header"]}}</h1>
-    <p>time limit per test : {{data[0]["timelimit"]}} second</p>
-    <p>memory limit per test : {{data[0]["memorylimit"]}} megabytes</p>
-    <p>input standard : standard input</p>
-    <p>output standard : standard output</p>
-    </div>
-    <p>{{data[0]["explaination"] | safe}}</P>
-<strong>Input</strong>
-<p>{{data[0]["inputExp"] | safe}}</p>
-<strong>Output</strong>
-<p>{{data[0]["outputExp"] | safe}}</p>
-<h4>Examples</h4>
-<div class="examples">
-    <h3>input</h3>
-    <p class="input">{{data[0]["stdinHelp"] | safe}}</p>
-    <h3>Output</h3>
-    <p class="input">{{data[0]["outputHelp"] | safe}}</p>
-    
-</div>    
-<b>Note:</b>
-
-{{data[0]["note"] | safe}}
-
-</div>
-</div>
-
-
-
-<div class="col-md-4" style="float:right;    padding-top: 18px;">
+{% if homework: %}
 <div class="codearea">
     <div class="dropdowns">
 
@@ -183,16 +134,11 @@ h3 {
 <div id="test"></div>
  </div>
 
-</div>
-</div>
- 
- </div>
- 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
     
-    
+   
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/python");
@@ -212,7 +158,7 @@ h3 {
     var timelim=parseInt(timelim);
     // Get selected Language
     var stdin =$('#inputt').text().split(',');
-    var dataout =$('#expectedOutput').text().replace(/(\r\n|\n|\r)/gm,"").split(',');
+    var dataout =$('#expectedOutput').text().split(',');
 
     // Get Selected Theme
     function theme(){
@@ -220,14 +166,14 @@ h3 {
         editor.setTheme("ace/theme/"+t);
     }
     
-  
+    
     
     // submit user given code
     $('#submit').on('click', function(){
      document.getElementById("output").innerHTML = "Testing ... ";
      document.getElementById("test").innerHTML ="";
         codeF = editor.getValue();
-    
+
        //initlize variables
        
     i=0;
@@ -250,7 +196,7 @@ h3 {
             flag=true;
             for(var j=0;j<length;j++){
                 console.log(out[j],dataout[j]);
-                   if ((out[j].toString()) != (dataout[j].toString())){
+                   if (out[j]!=dataout[j]){
                        document.getElementById("output").innerHTML = "Test Failed at input:" + " " +stdin[j]+ " Expected output:" + " " +dataout[j];
                        flag=false;
                        break;
@@ -264,10 +210,10 @@ h3 {
                 };
         //post request to that link and get the output
                 
-                $.post(Flask.url_for("Contestsolved"), JSON.stringify(solvedd))
+                $.post(Flask.url_for("solved"), JSON.stringify(solvedd))
                 .success(function(data, error, xhr) {
                              alert("Question Solved Congrats!!");
-                });
+                         });
             }
         $("#submit").prop('disabled', false);
         $("#send").prop('disabled', false);
@@ -278,7 +224,7 @@ h3 {
          var json = {
             language: lang,
             code: codeF,
-            timeout:15,
+            timeout:10,
             stdin:stdin[i]
         };
         //post request to that link and get the output
@@ -286,21 +232,12 @@ h3 {
         $.post(Flask.url_for("compiler"), JSON.stringify(json))
         .success(function(data, error, xhr) {
                 $("#test").append(data.output+",");
-                  if(lang==8){
-                      timelim=5;
-                  }
                  if(data.time>timelim){
                       document.getElementById("output").innerHTML="Timed out";
-                        $("#submit").prop('disabled', false);
-                        $("#send").prop('disabled', false);
-
                      return;
                  }
                 if(data.errors){
                 document.getElementById("output").innerHTML=data.errors;
-                 $("#submit").prop('disabled', false);
-        $("#send").prop('disabled', false);
-
                     return;
                 }
                     calls(i+1,maxcalls);
@@ -311,9 +248,6 @@ h3 {
         
         // log error to browser's console
         document.getElementById("output").innerHTML=errorThrown.toString();
-        $("#submit").prop('disabled', false);
-        $("#send").prop('disabled', false);
-
         return;    
     });
 }

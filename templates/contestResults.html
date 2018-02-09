@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Contest Results
+{% endblock %}
+{% block head %}
+<style>
+ .container>main{
+    padding-left:20px;
+    width: 80%;
+}
+h1{
+    text-align:center;
+}
+</style>
+
+{% endblock %}
+
+{% block main %}
+<h1>Contest Results!</h1>
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>Ranked</th>
+    <th>User Name</th>
+    <th>Problems Solved</th>
+  
+  </tr>
+</thead>    
+<tbody>
+ {% set count = [0] %}
+
+ {% for user in data %}
+     {% if count.append(count.pop() + 1) %}
+     {% endif %}
+    <tr>
+        <td> {{ count }}</td>
+        <td>{{user["user_name"]}}</td>
+        <td>{{user["summation"]}}</td>
+    </tr>
+        
+ {% endfor %}   
+       
+    
+</tbody>
+</table>
+
+
+{% endblock %}

@@ -10,12 +10,10 @@
 <style>
 
 .codearea{
-    width:500px;
-    height:699px;
-    display: block;
+    width:100%;
     position:relative;
     float:right;
-border:1px black solid;
+    border:1px black solid;
 }
 textarea {
     resize: none;
@@ -56,8 +54,6 @@ textarea {
 .questions{
     display:block;
     float:left;
-    width:55%;
-    height:800px;
     text-align:left;
 }
 .input{
@@ -100,16 +96,20 @@ h3 {
                  {% endfor %}
             </select>
         </div>
-            
         <div class="form-group">
                 <button class="blue btn btn-default" type="submit">Choose</button>
         </div>
-        
     </form>
-
 {% endif %}
 
+
+
+
+
 {% if data: %}
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-8">
 <div class="questions">
     <div class="center">
     <h1 id="name">{{data[0]["header"]}}</h1>
@@ -122,7 +122,7 @@ h3 {
 <strong>Input</strong>
 <p>{{data[0]["inputExp"] | safe}}</p>
 <strong>Output</strong>
-<p>{{data[0]["outputExp"]}}</p>
+<p>{{data[0]["outputExp"] | safe}}</p>
 <h4>Examples</h4>
 <div class="examples">
     <h3>input</h3>
@@ -132,11 +132,15 @@ h3 {
     
 </div>    
 <b>Note:</b>
-<p>
-{{data[0]["note"]}}
-</p>
+
+{{data[0]["note"] | safe}}
+
+</div>
 </div>
 
+
+
+<div class="col-md-4" style="float:right;    padding-top: 18px;">
 <div class="codearea">
     <div class="dropdowns">
 
@@ -177,9 +181,11 @@ h3 {
 <div id="timelimit">{{data[0]["timelimit"]}}</div>
 <div id="test"></div>
  </div>
+
+</div>
+</div>
  
- 
- 
+ </div>
  
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
@@ -244,7 +250,7 @@ h3 {
             for(var j=0;j<length;j++){
                 console.log(out[j],dataout[j]);
                    if (out[j]!=dataout[j]){
-                       document.getElementById("output").innerHTML = "Test Failed at :" + " " +stdin[j]+ " Expected:" + " " +dataout[j];
+                       document.getElementById("output").innerHTML = "Test Failed at input:" + " " +stdin[j]+ " Expected output:" + " " +dataout[j];
                        flag=false;
                        break;
                      }
@@ -257,7 +263,7 @@ h3 {
                 };
         //post request to that link and get the output
                 
-                $.post(Flask.url_for("solved"), JSON.stringify(solvedd))
+                $.post(Flask.url_for("cf"), JSON.stringify(solvedd))
                 .success(function(data, error, xhr) {
                              alert("Question Solved Congrats!!");
                          });

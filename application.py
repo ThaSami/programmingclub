@@ -63,6 +63,15 @@ def custom_static4(filename):
     return send_from_directory(app.config['static4'], filename,as_attachment=True)    
 
 
+#admin page 
+@app.route("/admin", methods=["GET"])
+@login_required
+def admin():
+    if session["user_id"]==1:
+        return render_template("admin.html")
+    return apology("You are not admin boy!")
+    
+    
 @app.route("/change", methods=["GET", "POST"])
 @login_required
 def change():
@@ -114,12 +123,64 @@ def compilearea():
 @app.route("/contests",methods=["POST","GET"])
 @login_required
 def contests():
-   if request.method == "POST":
-       if not request.form.get("ContestPass"):
-           flash("Please Enter a password")
-           return render_template("contests.html")
-   return render_template("contests.html")
+    if request.method == "POST":
+        if  request.form.get("admin") or request.form.get("select"):
+            if request.form.get("admin")=="Start":
+                db.execute("UPDATE contestStatus SET Start=1")
+                db.execute("UPDATE contestStatus SET Stop=0")
+            if request.form.get("admin")=="Stop":
+                db.execute("UPDATE contestStatus SET Start=0")
+                db.execute("UPDATE contestStatus SET Stop=1")
+            if request.form.get("admin")=="Reset":
+                db.execute("DELETE FROM solvedC")
+                db.execute("UPDATE contestStatus SET Start=0")
+                db.execute("UPDATE contestStatus SET Stop=0")
+            if request.form.get("select"):    
+                data=db.execute("SELECT * FROM contestProblems WHERE header=:header",header=request.form.get("select"))
+                return render_template("contests.html",data=data)   
+        else:
+            flash("choose something!")
+            return render_template("contests.html")
+    stat=db.execute("SELECT * FROM contestStatus")
+    if stat[0]["Start"]==1:
+           questions=db.execute("SELECT header FROM contestProblems")
+           return render_template("contests.html",questions=questions)   
+    elif stat[0]["Stop"]==1:
+        return redirect(url_for("contestResults"))
+    return apology("Check CPE Facebook Group for contest Time/Date!")
 
+
+
+@app.route("/cf",methods=["POST"])
+@login_required
+def cf():
+    if request.method=="POST":
+        content=request.get_json(force=True)
+        name=db.execute("SELECT user_name FROM user WHERE user_id=:id",id=session["user_id"])
+        check=db.execute("SELECT user_name FROM solvedProblems WHERE user_name=:name",name=name[0]["user_name"])
+        if not check:
+            db.execute("INSERT INTO solvedProblems(:problem,user_name) VALUES(1,:name)",problem=content["name"],name=name[0]["user_name"])
+        else:
+            check2=db.execute("SELECT * FROM solvedProblems WHERE user_name=:name",name=name[0]["user_name"])
+            if check2[0][content["name"]]==0:
+                db.execute("UPDATE solvedProblems SET :problem=1 WHERE user_name=:name",problem=content["name"],name=name[0]["user_name"])
+            else:
+                return "SOLVED"
+            
+        return "SOLVED"
+    return "ERROR"    
+
+
+@app.route("/contestResults",methods=["GET"])
+@login_required
+def contestResults():
+    r=db.execute("SELECT * FROM solvedC")
+    data=[]
+    for item in r:
+        data.append(dict({'user_name':item["user_name"],'summation':sum(i for i in item.values() if isinstance(i, int))}))
+    data = sorted(data, key=itemgetter('summation'),reverse=True)
+    return render_template("contestResults.html",data=data)
+    
 @app.route("/ladder")
 @login_required
 def ladder():
@@ -130,7 +191,28 @@ def ladder():
     data = sorted(data, key=itemgetter('summation'),reverse=True)
     return render_template("ladder.html",data=data) 
 
-
+@app.route("/cpptut",methods=["POST"])
+@login_required
+def cpptut():
+    if request.method == "POST":
+        if request.form.get("select"):
+            tut=db.execute("SELECT * FROM cpptutorials where LessonName=:number",number=request.form.get("select"))
+            return render_template("tutorials.html",tutor=tut)
+                
+@app.route("/tutorials",methods=["POST","GET"])
+@login_required
+def tutorials():
+    
+    if request.method == "POST":
+        if request.form.get("select"):
+            if request.form.get("select")=="C++":
+                cppdata=db.execute("SELECT * FROM cpptutorials")
+                return render_template("tutorials.html",data=cppdata)
+            else:    
+                flash("Choose PROBLEM!!")
+                return render_template("tutorials.html")
+        
+    return render_template("tutorials.html") 
 
 
 @app.route("/aboutus")
@@ -209,24 +291,27 @@ def login():
     else:
         return render_template("login.html")
 
-@app.route("/solved",methods=["POST"])
+
+
+@app.route("/Contestsolved",methods=["POST"])
 @login_required
-def solved():
+def Contestsolved():
     if request.method=="POST":
         content=request.get_json(force=True)
         name=db.execute("SELECT user_name FROM user WHERE user_id=:id",id=session["user_id"])
-        check=db.execute("SELECT user_name FROM solvedProblems WHERE user_name=:name",name=name[0]["user_name"])
+        check=db.execute("SELECT user_name FROM solvedC WHERE user_name=:name",name=name[0]["user_name"])
         if not check:
-            db.execute("INSERT INTO solvedProblems(:problem,user_name) VALUES(1,:name) ",problem=content["name"],name=name[0]["user_name"])
+            db.execute("INSERT INTO solvedC(:problem,user_name) VALUES(1,:name)",problem=content["name"],name=name[0]["user_name"])
         else:
-            check2=db.execute("SELECT * FROM solvedProblems WHERE user_name=:name",name=name[0]["user_name"])
+            check2=db.execute("SELECT * FROM solvedC WHERE user_name=:name",name=name[0]["user_name"])
             if check2[0][content["name"]]==0:
-                db.execute("UPDATE solvedProblems SET :problem=1 WHERE user_name=:name",problem=content["name"],name=name[0]["user_name"])
+                db.execute("UPDATE solvedC SET :problem=1 WHERE user_name=:name",problem=content["name"],name=name[0]["user_name"])
             else:
-                return "SOLVED"
+                return "SOLVEDD"
             
-        return "SOLVED"
-    raise "ERROR"    
+        return "SOLVEDD"
+    return "ERROR"
+    
         
 @app.route("/logout")
 def logout():
