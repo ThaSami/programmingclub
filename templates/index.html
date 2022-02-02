@@ -4,17 +4,102 @@
     Index
 {% endblock %}
 
+{% block head %}
+<style>
+.left{
+    text-align:left;
+}
+.black{
+    color:black;
+}
+.blue{
+    color:blue;
+}
+.container>main{
+    padding-left:20px;
+    width: 80%;
+}
+.black:hover{text-decoration: underline !important;}
+
+p{
+    font-family: 'Roboto Condensed', sans-serif;
+        font-size: 17px;
+}
+h2{
+    text-align: center;
+        padding-bottom: 26px;
+}
+
+</style>
+
+{% endblock %}
+
 {% block main %}
-<pre id="editor">function foo(items) {
-    var i;
-    for (i = 0; i &lt; items.length; i++) {
-        alert("Ace Rocks " + items[i]);
-    }
-}</pre>
-<script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
-<script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/c_cpp");
-</script>
+<link href="https://fonts.googleapis.com/css?family=Archivo+Narrow" rel="stylesheet">
+
+<header>
+    <h1 style="text-align:center;font-weight:bold;">Short Guide To Computer Science and Competitive Programming</h1>
+</header>
+<br/><br/>
+<section class="left">
+
+<h2><a href="https://www.edx.org/course/introduction-computer-science-harvardx-cs50x" class="black"  style=" text-decoration: none;color:#337ab7;">CS50</a></h2>
+
+<hr/>
+<h2>About this course</h2>
+<p>
+This is CS50x, Harvard University's introduction to the intellectual enterprises of computer science and the art of programming for majors and non-majors alike, with or without prior programming experience. An entry-level course taught by David J. Malan, CS50x teaches students how to think algorithmically and solve problems efficiently. Topics include abstraction, algorithms, data structures, encapsulation, resource management, security, software engineering, and web development. Languages include C, Python, SQL, and JavaScript plus CSS and HTML. Problem sets inspired by real-world domains of biology, cryptography, finance, forensics, and gaming. As of Fall 2016, the on-campus version of CS50x, CS50, was Harvard's largest course.
+
+Students who earn a satisfactory score on 9 problem sets (i.e., programming assignments) and a final project are eligible for a certificate. This is a self-paced course–you may take CS50x on your own schedule.
+
+</p>
+
+<hr/>
+<h2>What you'll learn</h2>
+<ul style="font-family: 'Roboto Condensed', sans-serif;
+        font-size: 17px;">
+<li>A broad and robust understanding of computer science and programming</li>
+<li>How to think algorithmically and solve programming problems efficiently</li>
+<li>Concepts like abstraction, algorithms, data structures, encapsulation, resource management, security, software engineering, and web development</li>
+<li>Familiarity in a number of languages, including C, Python, SQL, and JavaScript plus CSS and HTML</li>
+<li>How to engage with a vibrant community of like-minded learners from all levels of experience</li>
+<li>How to develop and present a final programming project to your peers</li>
+
+<hr/>
+ <div style="text-align:center;"><iframe width="900" height="600" src="https://www.youtube.com/embed/5dFxQRcsKpw" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe></div>
+</ul>
+
+
+</section>
+<br/>
+<hr/>
+<section class="left">
+<h1 style="text-align:center;font-weight:bold;">Introduction to computer Science using python</h1>
+<br/><br/>
+<h2>About this course</h2>
+<p>This course is the first of a two-course sequence: Introduction to Computer Science and Programming Using Python, and Introduction to Computational Thinking and Data Science. Together, they are designed to help people with no prior exposure to computer science or programming learn to think computationally and write programs to tackle useful problems. Some of the people taking the two courses will use them as a stepping stone to more advanced computer science courses, but for many it will be their first and last computer science courses. This run features updated lecture videos, lecture exercises, and problem sets to use the new version of Python 3.5. Even if you took the course with Python 2.7, you will be able to easily transition to Python 3.5 in future courses, or enroll now to refresh your learning.
+<br/>
+Since these courses may be the only formal computer science courses many of the students take, we have chosen to focus on breadth rather than depth. The goal is to provide students with a brief introduction to many topics so they will have an idea of what is possible when they need to think about how to use computation to accomplish some goal later in their career. That said, they are not "computation appreciation" courses. They are challenging and rigorous courses in which the students spend a lot of time and effort learning to bend the computer to their will.</p>
+<hr/>
+<h2>What you will learn:</h2>
+<ul style="font-family: 'Roboto Condensed', sans-serif;
+        font-size: 17px;">
+    <li>A Notion of computation</li>
+<li>The Python programming language</li>
+<li>Some simple algorithms</li>
+<li>Testing and debugging</li>
+<li>An informal introduction to algorithmic complexity</li>
+<li>Data structures</li>
+</ul>
+<div style="text-align:center;"><iframe width="900" height="600" src="https://www.youtube.com/embed/ww2BdhILIio" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe></div>
+</section>
+<br/>
+<hr/>
+<section class="left">
+    <h2>Books:</h2>
+    <ul class="black">
+        <li><a href="https://cses.fi/book.html" class="blue">Competetive Programming Handbook</a></li>
+        <li><a href="http://www.crackingthecodinginterview.com/" class="blue">Crack the Interview code</a></li>
+    </ul>
+</section>
 {% endblock %}

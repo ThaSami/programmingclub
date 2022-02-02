@@ -1,4 +1,6 @@
 Flask
-Flask-Session
+Flask-JSGlue
+Flask_session
 passlib
-SQLAlchemy
+requests
+cs50

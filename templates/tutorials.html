@@ -1,0 +1,334 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Practice
+{% endblock %}
+
+{% block head %}
+     <script src="{{ url_for('custom_static4',filename='langs.js') }}"></script>
+
+<style>
+
+.codearea{
+    width:100%;
+    position:relative;
+    border:1px black solid;
+}
+textarea {
+    resize: none;
+    background-color:#141414;
+    text-align:left;
+    
+}
+#editor{
+    width:100%;
+    height:360px;
+}
+
+#stdin{
+    color:white;
+    width:100%;
+    height:70px;
+}
+#output{
+  width:100%;
+  height:120px;
+  background-color:#141414;
+  color:white;
+  text-align:left;
+}
+.dropdowns > select{
+    float:right;
+	position: relative;
+	-webkit-transition: color 1s ease, background-color 1s ease;
+	-moz-transition: color 1s ease, background-color 1s ease;
+	-o-transition: color 1s ease, background-color 1s ease;
+	transition: color 1s ease, background-color 1s ease;
+}
+.dropdowns select:hover {
+    color: #FFFFFF;
+	background-color: #91A3C2;
+}
+.questions{
+    display:block;
+    text-align:left;
+}
+.input{
+    color:red;
+    background-color:#F0F0F0;
+    border:1px black solid;
+}
+.centerarea{
+    display:block;
+    text-align:center;
+}
+.center{
+    text-align:center;
+}
+.invis{
+    visibility:hidden;
+}
+.btn{
+    
+    border:1px blue solid;
+}
+.container>main{
+    padding-left:20px;
+}
+a{
+    color:black;
+}
+</style>
+
+
+{% endblock %}
+ 
+
+{% block main %}
+
+{% if ((data==NONE) and (tutor==NONE)) %}
+      <form action="{{ url_for('tutorials') }}" method="post">
+       <div class="form-group center">
+           <select name="select" autofocus class="form-control">
+                  <option disabled selected value>Choose Language</option> 
+    
+                 
+                   <option value="JAVA">JAVA</option> 
+                   <option value="C++">C++</option> 
+
+            </select>
+        </div>
+        <div class="form-group">
+                <button class="blue btn btn-default" type="submit">Choose</button>
+        </div>
+    </form>
+{% endif %}
+
+
+{% if ((tutorial==NONE) and (data)) %}
+    
+    <form action="{{ url_for('cpptut') }}" method="post">
+       <div class="form-group center">
+           <select name="select" autofocus class="form-control">
+               
+                  <option disabled selected value>Choose tutorial</option> 
+     {% for lesson in data %}
+           
+                  <option value="{{lesson['LessonName']}}">Lesson : {{lesson["LessonName"]}}</option> 
+
+     {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+                <button class="blue btn btn-default" type="submit">Choose</button>
+        </div>
+    </form>    
+
+      
+
+{% endif %}
+
+
+
+{% if (tutor) and (data==NONE) %}
+<div class="questions">
+{{tutor[0]["exp"] | safe}}
+</div>
+{% endif %}
+<!--
+{% if homework: %}
+<div class="codearea">
+    <div class="dropdowns">
+
+ <select id="language" autofocus class="form-control" onchange="run()">
+                     
+                  <option selected value="0">python</option> 
+                  <option value="1">ruby</option> 
+                  <option value="2">clojure</option> 
+                  <option value="3">php</option> 
+                  <option value="4">javascript</option> 
+                  <option value="6">golang</option> 
+                  <option value="7">c_cpp</option> 
+                  <option value="8">java</option> 
+                  <option value="10">csharp</option> 
+                  <option value="12">objectivec</option> 
+                  <option value="13">perl</option> 
+                  <option value="14">rust</option> 
+</select>
+ <select id="theme" class="form-control" onchange="theme()">
+     <option selected disabled>Theme</option>
+     <option value="github">Light</option>
+     <option value="twilight">Dark</option>
+
+ </select>    
+</div>
+<pre id="editor">print ("HELLO WORLD")</pre>
+  
+<label>INPUT:</label>
+    <textarea id="stdin"></textarea>
+<label>Output:</label>
+    <textarea  id="output" disabled>Output of all tests appear here</textarea>
+    <input type="button" value="Run" id="send" class="btn btn-default">
+    <input type="button" value="Submit" id="submit" class="btn btn-default">
+</div>
+<div class="invis">
+<div id="inputt">{{data[0]["stdin"]}}</div>
+<div id="expectedOutput">{{data[0]["expectedOutput"]}}</div>
+<div id="timelimit">{{data[0]["timelimit"]}}</div>
+<div id="test"></div>
+ </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{ url_for('custom_static', filename='ace.js') }}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    
+   
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+    editor.session.setMode("ace/mode/python");
+    run();
+    var test,lang,e,codeF,i,length;
+    var flag=true;
+    function run(){
+    e = $('#language option:selected').text();
+    editor.session.setMode("ace/mode/"+e);
+    lang = $('#language').val();
+    if (lang==0) editor.setValue("print \"Hello\"",-1);
+    if (lang==7) editor.setValue("#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout<<\"Hello\";\n\treturn 0;\n}",-1);
+    if (lang==8) editor.setValue("// java exmple code\n\n//this will import required libraries\nimport java.util.*;\n\nclass Main{\n\npublic static void main(String args[]){\n\n\t//this will print hello wrold\n\tSystem.out.println(\"Hello World\");\n\n\t// this will read INTEGER FROM USERINPUT\n\tScanner input=new Scanner(System.in);\n\tint b = input.nextInt();\n\n\t// this will print the user input\n\tSystem.out.println(b);\n\n}\n}\n\n//Please Input a number to see how the code works!!",-1);
+
+    }
+    var timelim=$('#timelimit').text();
+    var timelim=parseInt(timelim);
+    // Get selected Language
+    var stdin =$('#inputt').text().split(',');
+    var dataout =$('#expectedOutput').text().split(',');
+
+    // Get Selected Theme
+    function theme(){
+        var t=$('#theme option:selected').val();
+        editor.setTheme("ace/theme/"+t);
+    }
+    
+    
+    
+    // submit user given code
+    $('#submit').on('click', function(){
+     document.getElementById("output").innerHTML = "Testing ... ";
+     document.getElementById("test").innerHTML ="";
+        codeF = editor.getValue();
+
+       //initlize variables
+       
+    i=0;
+    length=stdin.length;
+    
+    calls(i,length);  
+
+    
+});
+
+ //function...
+    function calls(i,maxcalls){
+        //break the recursive
+         $("#submit").prop('disabled', true);
+        $("#send").prop('disabled', true);
+
+        if (i==maxcalls){
+            console.log("Running Test Now");
+            var out =$('#test').text().replace(/(\r\n|\n|\r)/gm,"").split(',');
+            flag=true;
+            for(var j=0;j<length;j++){
+                console.log(out[j],dataout[j]);
+                   if (out[j]!=dataout[j]){
+                       document.getElementById("output").innerHTML = "Test Failed at input:" + " " +stdin[j]+ " Expected output:" + " " +dataout[j];
+                       flag=false;
+                       break;
+                     }
+            }       
+            if (flag==true){
+                    document.getElementById("output").innerHTML="Success!";
+                             
+                 var solvedd = {
+                    name:$('#name').text()
+                };
+        //post request to that link and get the output
+                
+                $.post(Flask.url_for("solved"), JSON.stringify(solvedd))
+                .success(function(data, error, xhr) {
+                             alert("Question Solved Congrats!!");
+                         });
+            }
+        $("#submit").prop('disabled', false);
+        $("#send").prop('disabled', false);
+
+        return;
+        }
+       
+         var json = {
+            language: lang,
+            code: codeF,
+            timeout:10,
+            stdin:stdin[i]
+        };
+        //post request to that link and get the output
+        
+        $.post(Flask.url_for("compiler"), JSON.stringify(json))
+        .success(function(data, error, xhr) {
+                $("#test").append(data.output+",");
+                 if(data.time>timelim){
+                      document.getElementById("output").innerHTML="Timed out";
+                     return;
+                 }
+                if(data.errors){
+                document.getElementById("output").innerHTML=data.errors;
+                    return;
+                }
+                    calls(i+1,maxcalls);
+
+            
+        })
+        .fail(function(xhr, error, errorThrown) {
+        
+        // log error to browser's console
+        document.getElementById("output").innerHTML=errorThrown.toString();
+        return;    
+    });
+}
+
+
+         
+
+      
+    //COMPILE USER GIVEN CODE
+    
+    $('#send').on('click', function() {
+        var codeF = editor.getValue();
+        var stdin = $('#stdin').val();
+    // passing the json file to the page 
+        var json = {
+            language: lang,
+            code: codeF,
+            stdin:stdin,
+            timeout:10
+        };
+        //post request to that link and get the output
+        
+        $.post(Flask.url_for("compiler"), JSON.stringify(json))
+        .success(function(data, error, xhr) {
+                document.getElementById("output").innerHTML=data.output + '\n' +'-----------------' +'\n'+ 'Execution Time : ' + data.time;
+                if(data.errors){
+                document.getElementById("output").innerHTML=data.errors;
+                }
+        })
+        .fail(function(xhr, error, errorThrown) {
+        document.getElementById("output").innerHTML=errorThrown.toString();
+
+
+    });
+});
+
+</script>
+{% endif %}
+!-->
+{% endblock %}

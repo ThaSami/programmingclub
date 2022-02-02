@@ -6,8 +6,25 @@ from functools import wraps
 
 
 
-
-
+def compilee(source):
+    
+        
+    if not source:
+        raise RuntimeError("Missing Code or language")
+        
+    data = {
+        'client_secret': CLIENT_SECRET,
+        'async': 0,
+        'source': source,
+        'lang': "PYTHON",
+        'time_limit': 5,
+        'memory_limit': 262144,
+        }
+        
+    r = requests.post(RUN_URL, data=data)
+    print (r.json())
+    return r
+    
 def apology(message, code=400):
     """Renders message as an apology to user."""
     def escape(s):
